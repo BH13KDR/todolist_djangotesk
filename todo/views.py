@@ -1,11 +1,13 @@
 from django.http import Http404
-from django.shortcuts import render
 from todo.models import Todo
+from django.conf import settings
+from django.shortcuts import render, redirect
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import login as django_login
 
 def todo_list(request):
     todo_list = Todo.objects.all().values_list('id', 'title')
     result = [{'id': todo[0], 'title': todo[1]} for i, todo in enumerate(todo_list)]
-
     return render(request, 'todo_list.html', {'data': result})
 
 
@@ -22,3 +24,22 @@ def todo_info(request, todo_id):
         return render(request, 'todo_info.html', {'data': info})
     except Todo.DoesNotExist:
         raise Http404("Todo does not exist")
+
+def sign_up(request):
+    form = UserCreationForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect(settings.LOGIN_URL)
+
+    context = {'form': form}
+    return render(request, 'registration/signup.html', context)
+
+
+def login(request):
+    form = AuthenticationForm(request, data=request.POST or None)
+    if form.is_valid():
+        django_login(request, form.get_user())
+        return redirect(settings.LOGIN_REDIRECT_URL)
+
+    context = {'form': form}
+    return render(request, 'registration/login.html', context)

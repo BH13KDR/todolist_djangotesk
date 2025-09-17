@@ -41,6 +41,7 @@ DJANGO_APPS = [
 
 OWN_APPS = [
     'todo',
+    'users',
 ]
 
 THIRD_APPS = [
@@ -48,6 +49,9 @@ THIRD_APPS = [
 ]
 
 INSTALLED_APPS = DJANGO_APPS + OWN_APPS + THIRD_APPS
+
+LOGIN_REDIRECT_URL = '/todo/'
+LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -59,7 +63,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'ToDoList.urls'
+ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
